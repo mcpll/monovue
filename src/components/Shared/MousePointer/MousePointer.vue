@@ -1,0 +1,70 @@
+<template>
+    <svg ref="mousePointer" class="cursor" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 83.7 60">
+        <path fill="none" stroke-dasharray="245" d="M42.1,1.5C58,1.5,70.8,14.3,70.8,30S58,58.5,42.1,58.5c-15.8,0-28.7-12.8-28.7-28.5S26.3,1.5,42.1,1.5z" has-binding="" class=""></path>
+        <path stroke="none" d="M4.5,32.6v-7.9l-4.5,4L4.5,32.6z M79.2,24.7v7.9l4.5-4L79.2,24.7z" class="cursor__arrows" ref="cursor__arrows"></path>
+    </svg>
+</template>
+//v-style= "transform: 'translate(' + this.MoveObject.x + ','+ this.MoveObject.y + ')'"
+<script>
+    import _ from 'lodash'
+    import { TweenMax } from 'gsap'
+
+    export default {
+        name: 'MousePointer',
+
+        data() {
+            return {
+                MoveObject: {
+                    x: 0,
+                    y: 0
+                }
+            }
+        },
+        created() {
+            window.addEventListener('mousemove',this.getMouseCordinates);
+            window.addEventListener('mousedown',this.onMouseDown);
+            window.addEventListener('mouseup',this.onMouseUp);
+            window.addEventListener('mouseovr',this.onMouseOver)
+        },
+        methods: {
+            getMouseCordinates(event) {
+                this.MoveObject.x = event.pageX -50;
+                this.MoveObject.y = event.pageY -100;
+
+                TweenMax.to(this.$refs.mousePointer, .2, {x:this.MoveObject.x, y:this.MoveObject.y, transformOrigin:"center center"});
+            },
+            onMouseDown() {
+                TweenMax.to(this.$refs.mousePointer, .25, {scale: 1, transformOrigin:"center center", strokeWidth: 2});
+                TweenMax.to(this.$refs.cursor__arrows, .25, {opacity:1});
+            },
+            onMouseUp() {
+                TweenMax.to(this.$refs.mousePointer, .25, {scale: .5, transformOrigin:"center center", strokeWidth: 3});
+                TweenMax.to(this.$refs.cursor__arrows, .25, {opacity:0});
+            },
+            onMouseOver() {
+                console.log('MouseOver');
+            }
+        }
+    }
+</script>
+
+<style scoped>
+    svg:not(:root) {
+        overflow: hidden;
+    }
+    .cursor {
+        display: block;
+        width: 100px;
+        height: 100px;
+        transform: scale(.5) translateZ(0);
+        stroke-width: 3;
+        stroke: #000;
+        fill: #000;
+        pointer-events: none;
+    }
+    .cursor__arrows {
+        opacity: 0;
+        transform: rotate(90deg);
+        transform-origin: center center;
+    }
+</style>
