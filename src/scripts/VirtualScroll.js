@@ -19,7 +19,6 @@ export default class VirtualScroll {
 
         this.xform = 'transform';
 
-
         this.onMouseDown = this.onMouseDown.bind(this);
         this.onMouseMove = this.onMouseMove.bind(this);
         this.onMouseUp = this.onMouseUp.bind(this);

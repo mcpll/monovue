@@ -6,6 +6,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import page  from './module/page'
 import app from './module/app'
+import mouse from './module/mouse'
 
 
 Vue.use(Vuex);
@@ -13,6 +14,7 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
     modules: {
         page,
-        app
+        app,
+        mouse
     }
 })

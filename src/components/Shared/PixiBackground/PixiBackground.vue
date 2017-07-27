@@ -3,21 +3,184 @@
 </template>
 
 <script>
-    import PIXI from 'PIXI'
+    import * as PIXI from 'pixi.js';
+    import { TweenMax } from 'gsap';
+
+    const imageBlob = require('../../../assets/blob.svg');
 
     export default {
         name: 'PixiBackground',
         created() {
-            let renderer = PIXI.autoDetectRenderer(256,256)
-            let stage =  new PIXI.Container();
+            this.$store.watch((state) => (state.mouse), this.moveFlare, {deep:true})
 
-            this.$refs.bgRenderer.appendChild(renderer.view);
+            window.addEventListener('resize', this.onResize);
 
-            renderer.render(stage);
+            ;
+        },
+        mounted() {
+            this.init()
+        },
+        methods: {
+            init() {
+                this.renderer = new PIXI.WebGLRenderer(window.innerWidth, window.innerHeight, { transparent: true }, true);
+                this.stage =  new PIXI.Container();
+
+                this.loading();
+
+
+                this.tm = 0;
+                this.blobFrames = [];
+                this.shadowFrame = [];
+                this.shaderFrag = `
+                    precision mediump float;
+
+                    varying vec2 vTextureCoord;
+                    uniform sampler2D uSampler;
+                    uniform vec2 resolution;
+                    uniform float time;
+
+                    void main(void){
+                       vec2 uv = gl_FragCoord.xy/resolution.xy;
+                       float strength = 16.0;
+                       float x = (uv.x + 4.0 ) * (uv.y + 4.0 ) * (time * 10.0);
+                       vec4 grain = vec4(mod((mod(x, 13.0) + 1.0) * (mod(x, 123.0) + 1.0), 0.01)-0.005) * strength;
+
+                       gl_FragColor = texture2D(uSampler, vTextureCoord) + grain;
+                    }
+                `;
+                this.filter = new PIXI.Filter( null, this.shaderFrag);
+                this.createFlare();
+                this.stage.filterArea = this.renderer.screen;
+                this.stage.filters = [this.filter];
+
+                this.$refs.bgRenderer.appendChild(this.renderer.view);
+
+                this.animate();
+
+            },
+
+            createFlare() {
+                let canvas = document.createElement('canvas');
+                canvas.width = 1080;
+                canvas.height = 1080;
+                let context = canvas.getContext('2d');
+                let grad = context.createRadialGradient(540,540,0,540,540,763.68);
+
+                grad.addColorStop(0, 'rgba(51,51,51,1)');
+                grad.addColorStop(0.59, 'rgba(51,51,51,0.02)');
+                grad.addColorStop(0.6, 'rgba(51,51,51,0)');
+
+                context.setTransform(1,0,0,1,0,0);
+                context.fillStyle = grad;
+                context.fillRect(0, 0, 1080,1080);
+
+                this.flare = new PIXI.Sprite(PIXI.Texture.fromCanvas(canvas));
+
+                this.flare.x = window.screen.availWidth/2 - this.flare.width/2;
+                this.flare.y = window.screen.availHeight/2 - this.flare.height/2;
+                this.flare.alpha = 0;
+
+                this.stage.addChild(this.flare);
+            },
+
+            loading() {
+                this.loader = new PIXI.loaders.Loader();
+                this.loader.add('/static/sprite/blob-0.json')
+                    .add('/static/sprite/blob-1.json')
+                    .add('/static/sprite/blob-2.json')
+                    .add('/static/sprite/blob-3.json')
+                    .add('/static/sprite/blob-4.json')
+                    .add('/static/sprite/blob-5.json')
+                    .add('/static/sprite/blob-6.json')
+                    .add('/static/sprite/blob-7.json')
+                    .add('/static/sprite/ombra-0.json')
+                    .add('/static/sprite/ombra-1.json')
+                    .add('/static/sprite/ombra-2.json')
+                    .add('/static/sprite/ombra-3.json')
+                    .add('/static/sprite/ombra-4.json')
+                    .add('/static/sprite/ombra-5.json')
+                    .add('/static/sprite/ombra-6.json')
+                    .add('/static/sprite/ombra-7.json')
+                    .load(this.setup);
+            },
+            setup() {
+                for (var i = 0; i < 64; i++) {
+                    var val = i < 10 ? '0' + i : i;
+
+                    //console.log('blob_00' + val + '.png');
+                    this.blobFrames.push(PIXI.Texture.fromFrame('blob_000' + val + '.png'));
+                    this.shadowFrame.push(PIXI.Texture.fromFrame('ombra_000' + val + '.png'));
+                }
+                this.createBlob();
+            },
+            createBlob() {
+                this.blob =  new PIXI.extras.AnimatedSprite(this.blobFrames);
+                this.blobShadows = new PIXI.extras.AnimatedSprite(this.shadowFrame);
+                this.blob.animationSpeed = this.blobShadows.animationSpeed =  .3;
+                this.blob.x = this.blobShadows.x = window.screen.availWidth/2 - this.blob.width/2;
+                this.blob.y = this.blobShadows.y = window.screen.availHeight/2 - this.blob.height/2;
+                this.blob.play();
+                this.blobShadows.play();
+                this.blob.alpha = 0;
+                this.blobShadows.alpha = 0;
+
+                this.stage.addChild(this.blobShadows);
+                this.stage.addChild(this.blob);
+
+                TweenMax.to(this.blob,3, {alpha:1,delay: 2});
+                TweenMax.to(this.blobShadows,3, {alpha:1,delay: 2});
+                TweenMax.to(this.flare,2, {alpha:1});
+            },
+            animate() {
+                requestAnimationFrame(this.animate);
+
+                let v2 = this.filter.uniforms.resolution;
+                v2[0] = this.renderer.screen.width;
+                v2[1] = this.renderer.screen.height;
+                this.filter.uniforms.resolution = v2;
+
+                this.tm+=0.01;
+                this.filter.uniforms.time = this.tm;
+
+                this.renderer.render(this.stage);
+            },
+
+            moveFlare(obj) {
+                let x;
+                let y;
+                let centerX = window.innerWidth/2;
+                let centerY = window.innerHeight/2;
+
+                let maxX = centerX + centerX * 0.20;
+                let minX =  centerX - centerX * 0.20;
+
+                let maxY = centerY + centerY * 0.20;
+                let minY =  centerY - centerY * 0.20;
+                x = (obj.mouseX > maxX ) ? maxX : (obj.mouseX < minX ) ? minX : obj.mouseX;
+                y = (obj.mouseY > maxY ) ? maxY : (obj.mouseY < minY ) ? minY : obj.mouseY;
+
+
+                TweenMax.killChildTweensOf(this.flare.position);
+                TweenMax.to(this.flare.position, 1.5, {x: x - 540, y: y - 580})
+            },
+
+            onResize() {
+                let w = window.innerWidth;
+                let h = window.innerHeight;
+
+                this.renderer.view.style.width = w + "px";
+                this.renderer.view.style.height = h + "px";
+                this.renderer.resize(w,h);
+            }
         }
     }
 </script>
 
 <style>
-
+    .pixibackground {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+    }
 </style>

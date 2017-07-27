@@ -1,7 +1,11 @@
 <template>
   <div id="app">
+
+    <grid></grid>
+    <pixi-background></pixi-background>
     <mouse-pointer></mouse-pointer>
     <router-view></router-view>
+
   </div>
 </template>
 
@@ -9,10 +13,12 @@
     import MousePointer from "./components/Shared/MousePointer/MousePointer";
     import Loader from "./components/Shared/Loader/Loader";
     import PixiBackground from "./components/Shared/PixiBackground/PixiBackground";
-    import Drag from "./components/Shared/Drag/Drag";
+    import Grid from "./components/Shared/Grid/Grid";
 
     export default {
         components: {
+            Grid,
+            SpectrumBar,
             Drag,
             PixiBackground,
             Loader,
@@ -22,7 +28,11 @@
 </script>
 
 <style>
+  html {
+    height: 100%;
+  }
   body {
+    background: #101010; /* Old browsers */
     overflow: hidden;
   }
   #app {
@@ -31,7 +41,6 @@
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
-    margin-top: 60px;
     overflow: hidden;
     width: 100%;
     height: 100%;

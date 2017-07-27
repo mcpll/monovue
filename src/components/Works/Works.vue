@@ -1,5 +1,6 @@
 <template>
     <div class="works">
+        <img src="../../assets/logo.png">
         <h1>{{ msg }}</h1>
         <h2>Essential Links</h2>
         <ul>
@@ -21,6 +22,9 @@
 </template>
 
 <script>
+
+    import { TweenMax } from 'gsap'
+
     export default {
         name: 'works',
         computed: {
@@ -28,13 +32,21 @@
                 return this.$store.state.page.works.msg
             }
         },
+        methods: {
+        },
+        mounted() {
+        }
     }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+    .works {
+        position: relative;
+    }
     h1, h2 {
         font-weight: normal;
+        color: white;
     }
 
     ul {
@@ -50,4 +62,48 @@
     a {
         color: #42b983;
     }
+
+    body {
+        background-color: black;
+        color: #ccc;
+        text-align: center;
+    }
+
+
+    #template, #path {
+        fill: none;
+    }
+    #template {
+        stroke-width: 5px;
+        stroke: #444;
+    }
+    #path {
+        stroke: #88CE02;
+        stroke-width: 20px;
+        visibility: hidden;
+    }
+    #code, #value {
+        font-size: 40px;
+        font-family: monospace;
+    }
+    #code {
+        color: #777;
+        margin: 20px;
+        position: relative;
+        visibility:hidden;
+    }
+    #current {
+        display: inline-block;
+        color: white;
+    }
+    #description {
+        max-width: 530px;
+        color: #777;
+        font-family: Arial, sans-serif;
+        font-size: 24px;
+        display: inline-block;
+        text-align: left;
+    }
+
+
 </style>

@@ -1,13 +1,14 @@
 <template>
     <svg ref="mousePointer" class="cursor" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 83.7 60">
-        <path fill="none" stroke-dasharray="245" d="M42.1,1.5C58,1.5,70.8,14.3,70.8,30S58,58.5,42.1,58.5c-15.8,0-28.7-12.8-28.7-28.5S26.3,1.5,42.1,1.5z" has-binding="" class=""></path>
-        <path stroke="none" d="M4.5,32.6v-7.9l-4.5,4L4.5,32.6z M79.2,24.7v7.9l4.5-4L79.2,24.7z" class="cursor__arrows" ref="cursor__arrows"></path>
+        <path fill="rgba(255,255,255,0.3)" stroke-dasharray="245" d="M42.1,1.5C58,1.5,70.8,14.3,70.8,30S58,58.5,42.1,58.5c-15.8,0-28.7-12.8-28.7-28.5S26.3,1.5,42.1,1.5z" has-binding="" class=""></path>
     </svg>
 </template>
 //v-style= "transform: 'translate(' + this.MoveObject.x + ','+ this.MoveObject.y + ')'"
 <script>
     import _ from 'lodash'
     import { TweenMax } from 'gsap'
+    import { mapMutations, mapGetters } from 'vuex';
+
 
     export default {
         name: 'MousePointer',
@@ -26,12 +27,25 @@
             window.addEventListener('mouseup',this.onMouseUp);
             window.addEventListener('mouseovr',this.onMouseOver)
         },
+        computed: {
+            ...mapGetters ([
+                'getX',
+                'getY'
+            ])
+        },
         methods: {
-            getMouseCordinates(event) {
-                this.MoveObject.x = event.pageX -50;
-                this.MoveObject.y = event.pageY -100;
+            ...mapMutations ([
+                'setMouseX',
+                'setMouseY',
+            ]),
 
-                TweenMax.to(this.$refs.mousePointer, .2, {x:this.MoveObject.x, y:this.MoveObject.y, transformOrigin:"center center"});
+
+
+            getMouseCordinates(event) {
+                this.setMouseX(event.pageX);
+                this.setMouseY(event.pageY);
+
+                TweenMax.to(this.$refs.mousePointer, .2, {x:this.getX - 50, y:this.getY - 50, transformOrigin:"center center"});
             },
             onMouseDown() {
                 TweenMax.to(this.$refs.mousePointer, .25, {scale: 1, transformOrigin:"center center", strokeWidth: 2});
@@ -58,9 +72,11 @@
         height: 100px;
         transform: scale(.5) translateZ(0);
         stroke-width: 3;
-        stroke: #000;
-        fill: #000;
+        stroke: none;
+        fill: none;
         pointer-events: none;
+        position: relative;
+        z-index: 1000;
     }
     .cursor__arrows {
         opacity: 0;

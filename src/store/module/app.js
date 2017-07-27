@@ -5,6 +5,7 @@
 const state = {
     leavePage: false,
     pageReady: false,
+    ticker: 0
 }
 
 const mutations = {
@@ -13,6 +14,9 @@ const mutations = {
     },
     setPageReady: (state, payload) => {
         state.pageReady = payload
+    },
+    ticker: (state) => {
+        state.ticker += 1
     }
 }
 
@@ -25,8 +29,15 @@ const actions = {
     }
 }
 
+const getters = {
+    getTicker: state => {
+        return state.ticker
+    }
+}
+
 export  default {
     state,
     mutations,
-    actions
+    actions,
+    getters
 }
