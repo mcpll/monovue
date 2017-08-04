@@ -38,9 +38,6 @@
                 'setMouseX',
                 'setMouseY',
             ]),
-
-
-
             getMouseCordinates(event) {
                 this.setMouseX(event.pageX);
                 this.setMouseY(event.pageY);
@@ -75,7 +72,7 @@
         stroke: none;
         fill: none;
         pointer-events: none;
-        position: relative;
+        position: absolute;
         z-index: 1000;
     }
     .cursor__arrows {

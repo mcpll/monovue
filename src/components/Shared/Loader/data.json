@@ -1,34 +1,5 @@
 {
   "assets": [
-    "/static/sprite/blob-1.json",
-    "/static/sprite/blob-2.json",
-    "/static/sprite/blob-3.json",
-    "/static/sprite/blob-4.json",
-    "/static/sprite/blob-5.json",
-    "/static/sprite/blob-6.json",
-    "/static/sprite/blob-7.json",
-    "/static/sprite/ombra-0.json",
-    "/static/sprite/ombra-1.json",
-    "/static/sprite/ombra-2.json",
-    "/static/sprite/ombra-3.json",
-    "/static/sprite/ombra-4.json",
-    "/static/sprite/ombra-5.json",
-    "/static/sprite/ombra-6.json",
-    "/static/sprite/ombra-7.json",
-    "/static/sprite/blob-1.png",
-    "/static/sprite/blob-2.png",
-    "/static/sprite/blob-3.png",
-    "/static/sprite/blob-4.png",
-    "/static/sprite/blob-5.png",
-    "/static/sprite/blob-6.png",
-    "/static/sprite/blob-7.png",
-    "/static/sprite/ombra-0.png",
-    "/static/sprite/ombra-1.png",
-    "/static/sprite/ombra-2.png",
-    "/static/sprite/ombra-3.png",
-    "/static/sprite/ombra-4.png",
-    "/static/sprite/ombra-5.png",
-    "/static/sprite/ombra-6.png",
-    "/static/sprite/ombra-7.png"
+
   ]
 }

@@ -29,10 +29,12 @@
         computed: {
             ...mapGetters ([
                 'getTicker',
+                'getAppReady'
             ])
         },
         created() {
             this.$store.watch((state) => {state.app.ticker}, this.pulse, {deep:true} );
+            this.$store.watch((state) => {state.app.appReady}, this.onAppready, {deep:true} );
         },
         mounted() {
             this.init();
@@ -47,20 +49,13 @@
                 this.am.init();
                 this.am.loadSound('static/sound/heartbeat.wav', true);
 
-                this.tl =  new TimelineLite();
+                this.tl =  new TimelineLite({paused: true});
                 this.tl.add(TweenMax.to(this.$refs.line5, .0325, {css:{opacity:.35}, onCompleteParams: [{target: this.$refs.line5, value: .2, isEnd: false}], onComplete: this.toggleAnimation}));
                 this.tl.add(TweenMax.to([this.$refs.line6,this.$refs.line4], .0325, {css:{opacity:.30}, onCompleteParams: [{target: [this.$refs.line6,this.$refs.line4], value: .15, isEnd:false}], onComplete: this.toggleAnimation, delay: .0325}));
                 this.tl.add(TweenMax.to([this.$refs.line3,this.$refs.line7], .0325, {css:{opacity:.25}, onCompleteParams: [{target: [this.$refs.line3,this.$refs.line7], value: .10, isEnd:false}], onComplete: this.toggleAnimation, delay: .065}));
                 this.tl.add(TweenMax.to([this.$refs.line8,this.$refs.line2], .0325, {css:{opacity:.20}, onCompleteParams: [{target: [this.$refs.line8,this.$refs.line2], value: .05, isEnd:true}], onComplete: this.toggleAnimation, delay: .0975}));
-
-                setInterval( () => {
-                    this.ticker();
-                }, 1100)
             },
             toggleAnimation(obj) {
-                //console.log(obj.target);
-                //console.log(obj.value);
-
                 if(obj.isEnd) {
                     TweenMax.to(obj.target,.0325, {css:{opacity: obj.value }, onComplete: () => {this.tl.restart(); this.tl.pause();}});
                 }
@@ -72,6 +67,21 @@
             pulse() {
                 this.tl.play();
                 //this.am.playSound();
+            },
+            onAppready() {
+                if(this.getAppReady)
+                {
+                    console.log('passi di qui?')
+                    TweenMax.to([this.$refs.line5],1, {css:{opacity: .20}});
+                    TweenMax.to([this.$refs.line6,this.$refs.line4],1, {css:{opacity: .15}, delay: 2});
+                    TweenMax.to([this.$refs.line3,this.$refs.line7],1, {css:{opacity: .10}, delay: 2.5});
+                    TweenMax.to([this.$refs.line8,this.$refs.line2],1, {css:{opacity: .05}, delay: 3, onComplete: this.startPulse});
+                }
+            },
+            startPulse() {
+                /*setInterval( () => {
+                    this.ticker();
+                }, 1100)*/
             }
         }
     }
@@ -79,7 +89,7 @@
 
 
 
-<style scoped>
+<style>
     .grid {
         height: 100%;
         width: 100%;
@@ -97,21 +107,21 @@
     .grid .container-fluid .row .line {
         border-left: 1px solid white;
         height: 100%;
-        opacity:.05;
+        opacity:0;
     }
 
     .grid .container-fluid .row .line.color-full {
         border-left: 1px solid white;
-        opacity: .20;
+        opacity: 0;
     }
 
     .grid .container-fluid .row .line.color-half {
         border-left: 1px solid white;
-        opacity: 0.15;
+        opacity: 0;
     }
 
     .grid .container-fluid .row .line.color-quart {
         border-left: 1px solid white;
-        opacity: 0.10;
+        opacity: 0;
     }
 </style>

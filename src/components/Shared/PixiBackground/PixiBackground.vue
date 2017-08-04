@@ -5,22 +5,22 @@
 <script>
     import * as PIXI from 'pixi.js';
     import { TweenMax } from 'gsap';
-
-    const imageBlob = require('../../../assets/blob.svg');
+    import { mapMutations, mapGetters } from 'vuex';
 
     export default {
         name: 'PixiBackground',
         created() {
             this.$store.watch((state) => (state.mouse), this.moveFlare, {deep:true})
-
             window.addEventListener('resize', this.onResize);
-
-            ;
         },
         mounted() {
             this.init()
         },
         methods: {
+            ...mapMutations([
+                'setLoading',
+                'setAppReady'
+            ]),
             init() {
                 this.renderer = new PIXI.WebGLRenderer(window.innerWidth, window.innerHeight, { transparent: true }, true);
                 this.stage =  new PIXI.Container();
@@ -101,35 +101,81 @@
                     .add('/static/sprite/ombra-5.json')
                     .add('/static/sprite/ombra-6.json')
                     .add('/static/sprite/ombra-7.json')
+                    .add('/static/sprite/prova-blob.mp4')
                     .load(this.setup);
+
+                this.loader.onProgress.add(() => {
+                    this.setLoading(this.loader.progress);
+                });
+
+                this.loader.onComplete.add(() => {
+                    this.setAppReady(true);
+                });
             },
             setup() {
                 for (var i = 0; i < 64; i++) {
                     var val = i < 10 ? '0' + i : i;
 
                     //console.log('blob_00' + val + '.png');
-                    this.blobFrames.push(PIXI.Texture.fromFrame('blob_000' + val + '.png'));
+                    //this.blobFrames.push(PIXI.Texture.fromFrame('blob000' + val + '.png'));
                     this.shadowFrame.push(PIXI.Texture.fromFrame('ombra_000' + val + '.png'));
                 }
                 this.createBlob();
             },
             createBlob() {
-                this.blob =  new PIXI.extras.AnimatedSprite(this.blobFrames);
+
+                let texture = PIXI.Texture.fromVideo('/static/sprite/prova-blob.mp4');
+                let source = texture.baseTexture.source;
+                this.blobContainer = new PIXI.Container();
+                this.blob = new PIXI.Sprite(texture);
                 this.blobShadows = new PIXI.extras.AnimatedSprite(this.shadowFrame);
+                source.loop = true;
+                this.blobShadows.play();
+
+                this.blob.width = this.blobShadows.width = 800;
+                this.blob.height = this.blobShadows.height = 800;
+                //console.log(this.blob.getBounds());
+
                 this.blob.animationSpeed = this.blobShadows.animationSpeed =  .3;
                 this.blob.x = this.blobShadows.x = window.screen.availWidth/2 - this.blob.width/2;
                 this.blob.y = this.blobShadows.y = window.screen.availHeight/2 - this.blob.height/2;
-                this.blob.play();
-                this.blobShadows.play();
+                //
+
+
                 this.blob.alpha = 0;
                 this.blobShadows.alpha = 0;
 
                 this.stage.addChild(this.blobShadows);
-                this.stage.addChild(this.blob);
+                //this.stage.addChild(this.blob);
 
-                TweenMax.to(this.blob,3, {alpha:1,delay: 2});
-                TweenMax.to(this.blobShadows,3, {alpha:1,delay: 2});
-                TweenMax.to(this.flare,2, {alpha:1});
+                let graphics = new PIXI.Graphics();
+
+                graphics.beginFill(0xFFFF99);
+                graphics.drawRect(0, 0, 800, 800);
+
+                graphics.x = window.screen.availWidth/2 - graphics.width/2;
+                graphics.y = window.screen.availHeight/2 - graphics.height/2;
+
+                //graphics.mask = this.blob;
+
+                //this.stage.addChild(graphics);
+
+
+
+                /*let colorMatrix = [
+                    1, 0, 0, 0, 0,
+                    0, 1, 0, 0, 0,
+                    0, 0, 1, 0, 0,
+                    0, 0, 0, 1, 0
+                ];
+                let filter = new PIXI.filters.ColorMatrixFilter();
+                filter.hue(140);
+
+                this.blob.filters = [filter];*/
+
+                TweenMax.to(this.blob,3, {alpha:1,delay: 4});
+                TweenMax.to(this.blobShadows,3, {alpha:1,delay: 4});
+                TweenMax.to(this.flare,2, {alpha:1,delay: 4});
             },
             animate() {
                 requestAnimationFrame(this.animate);

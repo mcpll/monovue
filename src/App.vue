@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-
+    <loader></loader>
     <grid></grid>
     <pixi-background></pixi-background>
     <mouse-pointer></mouse-pointer>
@@ -18,8 +18,6 @@
     export default {
         components: {
             Grid,
-            SpectrumBar,
-            Drag,
             PixiBackground,
             Loader,
             MousePointer},

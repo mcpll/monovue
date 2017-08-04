@@ -1,24 +1,29 @@
 <template>
   <div class="home">
-
+    <about @aboutclick="onAboutClick" :is-open="{ aboutIsOpen }"></about>
+    <text-analyzer></text-analyzer>
   </div>
 </template>
 
 <script>
+    import About from "./About";
+    import TextAnalyzer from "./TextInput";
 
     export default {
         name: 'home',
-        computed: {
-            msg() {
-                return this.$store.state.page.home.msg
+        data: function() {
+            return {
+                aboutIsOpen: false,
             }
         },
         components: {
-            Blob
-
+            TextAnalyzer,
+            About
         },
-        mounted() {
-
+        methods: {
+            onAboutClick() {
+                this.aboutIsOpen = !this.aboutIsOpen;
+            }
         }
     }
 
