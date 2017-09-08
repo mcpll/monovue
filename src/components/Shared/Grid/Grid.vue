@@ -66,7 +66,7 @@
             },
             pulse() {
                 this.tl.play();
-                //this.am.playSound();
+                this.am.playSound();
             },
             onAppready() {
                 if(this.getAppReady)
@@ -79,9 +79,9 @@
                 }
             },
             startPulse() {
-                /*setInterval( () => {
+                setInterval( () => {
                     this.ticker();
-                }, 1100)*/
+                }, 800)
             }
         }
     }

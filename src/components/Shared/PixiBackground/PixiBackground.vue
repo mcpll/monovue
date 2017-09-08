@@ -4,13 +4,15 @@
 
 <script>
     import * as PIXI from 'pixi.js';
-    import { TweenMax } from 'gsap';
+    import { TweenMax} from 'gsap';
+    import ColorPropsPlugin from '../../../../node_modules/gsap/ColorPropsPlugin'
     import { mapMutations, mapGetters } from 'vuex';
 
     export default {
         name: 'PixiBackground',
         created() {
             this.$store.watch((state) => (state.mouse), this.moveFlare, {deep:true})
+            this.$store.watch((state) => (state.app.currentColors), this.onColorChange, {deep:true})
             window.addEventListener('resize', this.onResize);
         },
         mounted() {
@@ -27,7 +29,7 @@
 
                 this.loading();
 
-
+                this.colors = {first:this.$store.getters.getCurrentColor('first'), second:this.$store.getters.getCurrentColor('second')}
                 this.tm = 0;
                 this.blobFrames = [];
                 this.shadowFrame = [];
@@ -67,8 +69,8 @@
                 let grad = context.createRadialGradient(540,540,0,540,540,763.68);
 
                 grad.addColorStop(0, 'rgba(51,51,51,1)');
-                grad.addColorStop(0.59, 'rgba(51,51,51,0.02)');
-                grad.addColorStop(0.6, 'rgba(51,51,51,0)');
+                grad.addColorStop(0.35, 'rgba(51,51,51,0.5)');
+                grad.addColorStop(0.70, 'rgba(51,51,51,0)');
 
                 context.setTransform(1,0,0,1,0,0);
                 context.fillStyle = grad;
@@ -139,43 +141,61 @@
                 this.blob.animationSpeed = this.blobShadows.animationSpeed =  .3;
                 this.blob.x = this.blobShadows.x = window.screen.availWidth/2 - this.blob.width/2;
                 this.blob.y = this.blobShadows.y = window.screen.availHeight/2 - this.blob.height/2;
-                //
+
 
 
                 this.blob.alpha = 0;
                 this.blobShadows.alpha = 0;
 
                 this.stage.addChild(this.blobShadows);
-                //this.stage.addChild(this.blob);
+                this.stage.addChild(this.blob);
 
-                let graphics = new PIXI.Graphics();
+                let canvas = document.createElement('canvas');
+                canvas.width = 800;
+                canvas.height = 800;
+                let context = canvas.getContext('2d');
+                let grad = context.createRadialGradient(400,400,0,400,400,565.69);
 
-                graphics.beginFill(0xFFFF99);
-                graphics.drawRect(0, 0, 800, 800);
+                grad.addColorStop(0, this.colors.first);
+                grad.addColorStop(1, this.colors.second);
 
-                graphics.x = window.screen.availWidth/2 - graphics.width/2;
-                graphics.y = window.screen.availHeight/2 - graphics.height/2;
+                context.setTransform(1,0,0,1,0,0);
+                context.fillStyle = grad;
+                context.fillRect(0, 0, 800,800);
 
-                //graphics.mask = this.blob;
-
-                //this.stage.addChild(graphics);
-
-
-
-                /*let colorMatrix = [
-                    1, 0, 0, 0, 0,
-                    0, 1, 0, 0, 0,
-                    0, 0, 1, 0, 0,
-                    0, 0, 0, 1, 0
-                ];
-                let filter = new PIXI.filters.ColorMatrixFilter();
-                filter.hue(140);
-
-                this.blob.filters = [filter];*/
+                this.bgTexture = PIXI.Texture.fromCanvas(canvas)
+                this.blobBg = new PIXI.Sprite(this.bgTexture);
+                this.blobBg.x = window.screen.availWidth/2 - this.blobBg.width/2;
+                this.blobBg.y = window.screen.availHeight/2 - this.blobBg.height/2;
+                this.blobBg.mask = this.blob;
+                this.stage.addChild(this.blobBg);
 
                 TweenMax.to(this.blob,3, {alpha:1,delay: 4});
                 TweenMax.to(this.blobShadows,3, {alpha:1,delay: 4});
                 TweenMax.to(this.flare,2, {alpha:1,delay: 4});
+
+
+            },
+            onColorChange() {
+                TweenMax.to(this.colors, 3, {colorProps:{first:this.$store.getters.getCurrentColor('first')}, onUpdate:this.reDrowBlobBG});
+                TweenMax.to(this.colors, 3, {colorProps:{second:this.$store.getters.getCurrentColor('second')}, onUpdate:this.reDrowBlobBG, delay: 2});
+            },
+            reDrowBlobBG() {
+                let canvas = document.createElement('canvas');
+                canvas.width = 800;
+                canvas.height = 800;
+                let context = canvas.getContext('2d');
+                let grad = context.createRadialGradient(400,400,0,400,400,565.69);
+
+                grad.addColorStop(0, this.colors.first);
+                grad.addColorStop(1, this.colors.second);
+
+                context.setTransform(1,0,0,1,0,0);
+                context.fillStyle = grad;
+                context.fillRect(0, 0, 800,800);
+
+                this.bgTexture = PIXI.Texture.fromCanvas(canvas);
+                this.blobBg.texture = this.bgTexture;
             },
             animate() {
                 requestAnimationFrame(this.animate);

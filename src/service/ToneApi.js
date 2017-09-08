@@ -6,22 +6,28 @@ import _ from 'lodash';
 
 export default class ToneApi {
     static getAnalisis (text) {
+        // c4f70d78-6b0c-4624-bf7e-33f46d45e04e
+        // EFzrl7Z5r8pv
         const ToneAnalyzer = new ToneAnalyzerV3({
-            username: 'c4f70d78-6b0c-4624-bf7e-33f46d45e04e',
-            password: 'EFzrl7Z5r8pv',
+            username: '913fe705-1704-4ab6-bee6-12bb9461ae21',
+            password: 'EfQtuTcsYuwX',
             version_date: '2016-05-19'
         })
-        ToneAnalyzer.tone({text: text},
-            function (err, tone) {
-                if (err)
-                { console.log(err) }
-                else
+
+        return new Promise(function(resolve, reject) {
+            ToneAnalyzer.tone({text: text},
+                function (err, tone) {
+                    if (err)
                     {
-                        let tone_res = tone.document_tone.tone_categories[0].tones;
-                        let result = _.sortBy(tone_res, 'score').reverse();
-                        console.log(result);
-                        return result
+                        reject(Error(err));
                     }
-            })
+                    else
+                    {
+                        resolve(tone);
+                    }
+                })
+        })
     }
 }
+
+
