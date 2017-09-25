@@ -30,7 +30,7 @@
     height: 100%;
   }
   body {
-    background: #101010; /* Old browsers */
+    background-color: #101010 !important; /* Old browsers */
     overflow: hidden;
   }
   #app {

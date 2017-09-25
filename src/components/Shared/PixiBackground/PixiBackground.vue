@@ -58,7 +58,6 @@
                 this.$refs.bgRenderer.appendChild(this.renderer.view);
 
                 this.animate();
-
             },
 
             createFlare() {
@@ -136,13 +135,10 @@
 
                 this.blob.width = this.blobShadows.width = 800;
                 this.blob.height = this.blobShadows.height = 800;
-                //console.log(this.blob.getBounds());
 
                 this.blob.animationSpeed = this.blobShadows.animationSpeed =  .3;
                 this.blob.x = this.blobShadows.x = window.screen.availWidth/2 - this.blob.width/2;
                 this.blob.y = this.blobShadows.y = window.screen.availHeight/2 - this.blob.height/2;
-
-
 
                 this.blob.alpha = 0;
                 this.blobShadows.alpha = 0;
@@ -174,6 +170,8 @@
                 TweenMax.to(this.blobShadows,3, {alpha:1,delay: 4});
                 TweenMax.to(this.flare,2, {alpha:1,delay: 4});
 
+
+                this.onResize();
 
             },
             onColorChange() {
@@ -237,6 +235,31 @@
                 this.renderer.view.style.width = w + "px";
                 this.renderer.view.style.height = h + "px";
                 this.renderer.resize(w,h);
+
+                let maxwhh = window.innerWidth;
+                let consthhpadding = 50;
+
+
+                if (window.innerHeight < maxwhh){
+                    maxwhh = window.innerHeight;
+                }
+
+                if (maxwhh < 450){
+                    maxwhh=450;
+                }
+                if (maxwhh > 800){
+                    maxwhh=800;
+                }
+                console.log(maxwhh);
+
+                this.blobBg.width = this.blob.width = this.blobShadows.width = maxwhh-consthhpadding;
+                this.blobBg.height= this.blob.height = this.blobShadows.height = maxwhh-consthhpadding;
+
+                this.blobBg.x = window.innerWidth/2 - this.blobBg.width/2;
+                this.blobBg.y = window.innerHeight/2 - this.blobBg.height/2;
+
+                this.blob.x = this.blobShadows.x =  window.innerWidth/2 - this.blob.width/2;
+                this.blob.y = this.blobShadows.y = window.innerHeight/2 - this.blob.height/2;
             }
         }
     }

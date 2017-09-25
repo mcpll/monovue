@@ -62,7 +62,9 @@
 </script>
 
 
-<style scoped>
+<style sco
+
+       ped>
     @import url('https://fonts.googleapis.com/css?family=Lato');
 
     textarea {

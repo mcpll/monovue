@@ -1,6 +1,7 @@
 <template>
   <div class="home">
-    <test></test>
+    <home-title :current-colors="{ currentColors }"></home-title>
+
     <about @aboutclick="onAboutClick" :is-open="{ aboutIsOpen }"></about>
     <div ref="analyzer_container" class="text-analyzer-container">
       <text-analyzer></text-analyzer>
@@ -12,7 +13,10 @@
     import About from "./About";
     import TextAnalyzer from "./TextInput";
     import Test from "../Shared/Test/test";
-    import { mapMutations } from 'vuex'
+    import HomeTitle from "./HomeTitle";
+    import { mapMutations,  mapActions, mapState } from 'vuex';
+    import GlobalState from '../../store/State'
+
 
     export default {
         name: 'home',
@@ -20,17 +24,26 @@
             return {
                 aboutIsOpen: false,
                 firstEmotion: '',
-                secondEmotion: ''
+                secondEmotion: '',
+                appReady: false,
+                appGlobalState: GlobalState.START
             }
         },
         components: {
+            HomeTitle,
             Test,
             TextAnalyzer,
             About
         },
+        computed: {
+            ...mapState({
+                currentColors: state => state.app.currentColors
+            })
+        },
         created() {
             this.$store.watch((state) => {state.app.emotionalResult}, this.onChangeEmotion, {deep:true} );
             window.addEventListener('resize', this.onResize);
+            this.setToken();
         },
         mounted() {
             this.onResize();
@@ -39,6 +52,9 @@
             ...mapMutations ([
                 'setFirstColor',
                 'setSecondColor',
+            ]),
+            ...mapActions ([
+                'setToken'
             ]),
             onAboutClick() {
                 this.aboutIsOpen = !this.aboutIsOpen;

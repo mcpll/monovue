@@ -10,7 +10,6 @@
         props: ['isOpen'],
         computed: {
             classes: () => {
-                console.log(this.isOpen);
                 let classes = [];
                 if(this.isOpen) {
                     classes.push('open');

@@ -79,9 +79,9 @@
                 }
             },
             startPulse() {
-                setInterval( () => {
-                    this.ticker();
-                }, 800)
+                //setInterval( () => {
+                    //this.ticker();
+                //}, 800)
             }
         }
     }

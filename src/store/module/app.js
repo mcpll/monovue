@@ -2,13 +2,15 @@
  * Created by Matteo on 07/06/2017.
  */
 
-import ToneApi from '../../service/ToneApi'
 import _ from 'lodash';
+import GlobalState from '../State'
 
+var ToneAnalyzerV3 = require('watson-developer-cloud/tone-analyzer/v3')
 
 const state = {
     leavePage: false,
     appReady: false,
+    globalState: GlobalState.START,
     ticker: 0,
     loading: 0,
     emotionalResult : [],
@@ -32,7 +34,8 @@ const state = {
         first: '#00FF00',
         second: '#00FFFF'
     },
-    heartBeat: 1100
+    heartBeat: 1100,
+    token: ''
 }
 
 const mutations = {
@@ -41,6 +44,9 @@ const mutations = {
     },
     setAppReady: (state, payload) => {
         state.appReady = payload
+    },
+    setAppGlobalState:(state, payload) => {
+        state.globalState = payload
     },
     ticker: (state) => {
         state.ticker += 1
@@ -56,10 +62,22 @@ const mutations = {
     },
     setSecondColor: (state, payload) => {
         state.currentColors.second = payload;
+    },
+    setToken: (state, payload) => {
+        state.token = payload;
     }
+
 }
 
 const actions = {
+    setToken: ({commit}) => {
+        fetch('https://www.monofonts.com/test/get-token.php').then(function(response) {
+                return response.text();
+            }
+        ).then(function(payload){
+            commit('setToken', payload)
+        })
+    },
     setLeavePage: ({commit}, payload) => {
         commit('setLeavePage', payload)
     },
@@ -67,13 +85,20 @@ const actions = {
         commit('setAppReady',payload)
     },
     setEmotionResult: ({commit},payload) => {
-        console.log(payload);
-        ToneApi.getAnalisis(payload).then(function(response) {
-            let tone_res = response.document_tone.tone_categories[0].tones;
-            let result = _.values(_.sortBy(tone_res, 'score').reverse());
-            commit('setEmotionResult', result)
-        }, function(error){
-            console.error("Failed!", error);
+        let ToneAnalyzer = new ToneAnalyzerV3({
+            token: state.token,
+            version_date: '2016-05-19',
+        });
+        ToneAnalyzer.tone({text:payload}, function(err, result)  {
+            if(err) {
+                console.log(err)
+            }
+            else {
+                console.log();
+                let tone_res = result.document_tone.tone_categories[0].tones;
+                let tone_result = _.values(_.sortBy(tone_res, 'score').reverse());
+                commit('setEmotionResult', tone_result)
+            }
         })
     }
 }
