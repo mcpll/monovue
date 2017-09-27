@@ -1,0 +1,20 @@
+{"frames": {
+
+"blob00058.png":
+{
+	"frame": {"x":2,"y":2,"w":581,"h":572},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":111,"y":122,"w":581,"h":572},
+	"sourceSize": {"w":800,"h":800}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "blob-7.png",
+	"format": "RGBA8888",
+	"size": {"w":585,"h":576},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:bb81904d6c03c9ed9f0f9e602261df42:84f17b17198078b2b619e3eae96715da:9ba1ce0d7c283c11d34cbf21ab643dbc$"
+}
+}

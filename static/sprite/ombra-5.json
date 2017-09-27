@@ -1,0 +1,84 @@
+{"frames": {
+
+"ombra_00003.png":
+{
+	"frame": {"x":1342,"y":1296,"w":648,"h":660},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":107,"y":103,"w":648,"h":660},
+	"sourceSize": {"w":800,"h":800}
+},
+"ombra_00004.png":
+{
+	"frame": {"x":1,"y":1319,"w":649,"h":663},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":106,"y":101,"w":649,"h":663},
+	"sourceSize": {"w":800,"h":800}
+},
+"ombra_00005.png":
+{
+	"frame": {"x":675,"y":648,"w":650,"h":666},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":105,"y":100,"w":650,"h":666},
+	"sourceSize": {"w":800,"h":800}
+},
+"ombra_00006.png":
+{
+	"frame": {"x":1,"y":1,"w":651,"h":668},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":104,"y":99,"w":651,"h":668},
+	"sourceSize": {"w":800,"h":800}
+},
+"ombra_00052.png":
+{
+	"frame": {"x":1,"y":671,"w":672,"h":646},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":83,"y":106,"w":672,"h":646},
+	"sourceSize": {"w":800,"h":800}
+},
+"ombra_00053.png":
+{
+	"frame": {"x":654,"y":1,"w":669,"h":645},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":85,"y":107,"w":669,"h":645},
+	"sourceSize": {"w":800,"h":800}
+},
+"ombra_00054.png":
+{
+	"frame": {"x":1325,"y":1,"w":667,"h":645},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":87,"y":107,"w":667,"h":645},
+	"sourceSize": {"w":800,"h":800}
+},
+"ombra_00055.png":
+{
+	"frame": {"x":675,"y":1316,"w":665,"h":645},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":89,"y":107,"w":665,"h":645},
+	"sourceSize": {"w":800,"h":800}
+},
+"ombra_00056.png":
+{
+	"frame": {"x":1327,"y":648,"w":662,"h":646},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":91,"y":107,"w":662,"h":646},
+	"sourceSize": {"w":800,"h":800}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "ombra-5.png",
+	"format": "RGBA8888",
+	"size": {"w":1993,"h":1983},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:a466b26dd8d826812f883f891d35a1ba:27554828d8bf06836ff801113cd3619e:bf3955eabe4610244c0ea620c74c3225$"
+}
+}

@@ -1,0 +1,84 @@
+{"frames": {
+
+"ombra_00012.png":
+{
+	"frame": {"x":1376,"y":680,"w":660,"h":677},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":94,"y":95,"w":660,"h":677},
+	"sourceSize": {"w":800,"h":800}
+},
+"ombra_00013.png":
+{
+	"frame": {"x":690,"y":1330,"w":662,"h":677},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":92,"y":95,"w":662,"h":677},
+	"sourceSize": {"w":800,"h":800}
+},
+"ombra_00014.png":
+{
+	"frame": {"x":1376,"y":1,"w":664,"h":677},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":90,"y":95,"w":664,"h":677},
+	"sourceSize": {"w":800,"h":800}
+},
+"ombra_00033.png":
+{
+	"frame": {"x":1,"y":1,"w":684,"h":671},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":87,"y":89,"w":684,"h":671},
+	"sourceSize": {"w":800,"h":800}
+},
+"ombra_00034.png":
+{
+	"frame": {"x":687,"y":1,"w":685,"h":670},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":86,"y":90,"w":685,"h":670},
+	"sourceSize": {"w":800,"h":800}
+},
+"ombra_00035.png":
+{
+	"frame": {"x":1,"y":674,"w":686,"h":669},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":85,"y":91,"w":686,"h":669},
+	"sourceSize": {"w":800,"h":800}
+},
+"ombra_00036.png":
+{
+	"frame": {"x":1,"y":1345,"w":687,"h":666},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":83,"y":93,"w":687,"h":666},
+	"sourceSize": {"w":800,"h":800}
+},
+"ombra_00043.png":
+{
+	"frame": {"x":689,"y":673,"w":685,"h":655},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":78,"y":101,"w":685,"h":655},
+	"sourceSize": {"w":800,"h":800}
+},
+"ombra_00044.png":
+{
+	"frame": {"x":1354,"y":1359,"w":684,"h":654},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":78,"y":102,"w":684,"h":654},
+	"sourceSize": {"w":800,"h":800}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "ombra-2.png",
+	"format": "RGBA8888",
+	"size": {"w":2041,"h":2014},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:a466b26dd8d826812f883f891d35a1ba:27554828d8bf06836ff801113cd3619e:bf3955eabe4610244c0ea620c74c3225$"
+}
+}

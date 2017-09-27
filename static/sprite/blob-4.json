@@ -1,0 +1,84 @@
+{"frames": {
+
+"blob00004.png":
+{
+	"frame": {"x":1190,"y":1157,"w":575,"h":590},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":119,"y":115,"w":575,"h":590},
+	"sourceSize": {"w":800,"h":800}
+},
+"blob00005.png":
+{
+	"frame": {"x":613,"y":1157,"w":575,"h":592},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":119,"y":114,"w":575,"h":592},
+	"sourceSize": {"w":800,"h":800}
+},
+"blob00022.png":
+{
+	"frame": {"x":2,"y":2,"w":610,"h":593},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":89,"y":118,"w":610,"h":593},
+	"sourceSize": {"w":800,"h":800}
+},
+"blob00043.png":
+{
+	"frame": {"x":2,"y":597,"w":609,"h":577},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":93,"y":122,"w":609,"h":577},
+	"sourceSize": {"w":800,"h":800}
+},
+"blob00044.png":
+{
+	"frame": {"x":614,"y":2,"w":607,"h":576},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":94,"y":122,"w":607,"h":576},
+	"sourceSize": {"w":800,"h":800}
+},
+"blob00045.png":
+{
+	"frame": {"x":614,"y":580,"w":604,"h":575},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":95,"y":122,"w":604,"h":575},
+	"sourceSize": {"w":800,"h":800}
+},
+"blob00046.png":
+{
+	"frame": {"x":1220,"y":580,"w":603,"h":575},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":95,"y":122,"w":603,"h":575},
+	"sourceSize": {"w":800,"h":800}
+},
+"blob00047.png":
+{
+	"frame": {"x":1223,"y":2,"w":601,"h":574},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":96,"y":122,"w":601,"h":574},
+	"sourceSize": {"w":800,"h":800}
+},
+"blob00048.png":
+{
+	"frame": {"x":2,"y":1176,"w":599,"h":573},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":97,"y":122,"w":599,"h":573},
+	"sourceSize": {"w":800,"h":800}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "blob-4.png",
+	"format": "RGBA8888",
+	"size": {"w":1826,"h":1751},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:bb81904d6c03c9ed9f0f9e602261df42:84f17b17198078b2b619e3eae96715da:9ba1ce0d7c283c11d34cbf21ab643dbc$"
+}
+}
