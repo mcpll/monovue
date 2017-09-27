@@ -13,7 +13,7 @@
         data()  {
             return {
                 keyUpCount : 0,
-                text: 'write here',
+                text: 'Write your emotions here...',
                 limit:[30,10],
                 limitIndex: 0,
                 lastTextLenght: 0
@@ -77,9 +77,8 @@
         background-color: transparent;
         border: none;
         color:#ffffff;
-        font-family: 'Roboto', sans-serif;
+        font-family: 'Ubuntu', sans-serif;
         font-size: 19px;
-        text-transform: uppercase;
         text-align: center;
         resize: none;
         width: 300px;
