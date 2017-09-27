@@ -1,9 +1,11 @@
 <template>
   <div class="home">
-    <home-title :current-colors="{ currentColors }"></home-title>
-
-    <about @aboutclick="onAboutClick" :is-open="{ aboutIsOpen }"></about>
+    <home-title :current-colors="{ currentColors }" :current-state="{ currentState }"></home-title>
+    <home-monofonts-logo :current-state="{ currentState }"></home-monofonts-logo>
+    <intro :current-state="{ currentState }"></intro>
+    <!--<about @aboutclick="onAboutClick" :is-open="{ aboutIsOpen }"></about>-->
     <div ref="analyzer_container" class="text-analyzer-container">
+      <home-emotion-result></home-emotion-result>
       <text-analyzer></text-analyzer>
     </div>
   </div>
@@ -16,6 +18,9 @@
     import HomeTitle from "./HomeTitle";
     import { mapMutations,  mapActions, mapState } from 'vuex';
     import GlobalState from '../../store/State'
+    import Intro from "./Intro/Intro";
+    import HomeMonofontsLogo from "./HomeMonofontsLogo";
+    import HomeEmotionResult from "./HomeEmotionResult";
 
 
     export default {
@@ -26,10 +31,12 @@
                 firstEmotion: '',
                 secondEmotion: '',
                 appReady: false,
-                appGlobalState: GlobalState.START
             }
         },
         components: {
+            HomeEmotionResult,
+            HomeMonofontsLogo,
+            Intro,
             HomeTitle,
             Test,
             TextAnalyzer,
@@ -37,7 +44,8 @@
         },
         computed: {
             ...mapState({
-                currentColors: state => state.app.currentColors
+                currentColors: state => state.app.currentColors,
+                currentState: state => state.app.globalState,
             })
         },
         created() {
@@ -107,7 +115,29 @@
 
             },
             onResize() {
+                let maxwhh = window.innerWidth;
+                let consthhpadding = 150;
 
+                if (window.innerHeight < maxwhh){
+                    maxwhh = window.innerHeight;
+                }
+
+                if (maxwhh < 320){
+                    maxwhh=320;
+                }
+                if (maxwhh > 600){
+                    maxwhh=600;
+                }
+
+                let top = (window.innerHeight/2 - (maxwhh-consthhpadding)/2) + 'px';
+                let left = (window.innerWidth/2 - (maxwhh-consthhpadding)/2) + 'px';
+                let w = maxwhh - consthhpadding;
+                let h = maxwhh - consthhpadding;
+
+                this.$refs.analyzer_container.style.width = w + 'px';
+                this.$refs.analyzer_container.style.height = h + 'px';
+                this.$refs.analyzer_container.style.top = top;
+                this.$refs.analyzer_container.style.left = left;
             }
         }
     }
@@ -123,10 +153,8 @@
   }
 
   .text-analyzer-container {
-    display: flex;
-    align-items: center;
-    height: 100vh;
-    justify-content: center;
+    border: 1px solid red;
+    position: relative;
   }
 h1, h2 {
   font-weight: normal;

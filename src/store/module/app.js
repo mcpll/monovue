@@ -10,6 +10,7 @@ var ToneAnalyzerV3 = require('watson-developer-cloud/tone-analyzer/v3')
 const state = {
     leavePage: false,
     appReady: false,
+    prevState: '',
     globalState: GlobalState.START,
     ticker: 0,
     loading: 0,
@@ -31,8 +32,8 @@ const state = {
         }
     },
     currentColors: {
-        first: '#00FF00',
-        second: '#00FFFF'
+        first: '#5b5b5b',
+        second: '#303030'
     },
     heartBeat: 1100,
     token: ''
@@ -126,6 +127,14 @@ const getters = {
     },
     getCurrentColor: (state, getter) => (id) => {
         return state.currentColors[id]
+    },
+    getFirstColorScore: state => {
+        if(state.emotionalResult.length > 0) {
+            return state.emotionalResult[0].score
+        }
+        else {
+            return 0.5
+        }
     }
  }
 

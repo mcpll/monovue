@@ -17,9 +17,10 @@
 
 <script>
 
-    import { mapMutations, mapGetters } from 'vuex';
+    import { mapMutations, mapGetters, mapState } from 'vuex';
     import { TimelineLite, TweenMax, Expo } from 'gsap';
     import AudioManger from '../../../scripts/AudioManager';
+    import GlobalState from '../../../store/State'
 
     require('../../../assets/css/bootstrap.min.css');
 
@@ -30,21 +31,24 @@
             ...mapGetters ([
                 'getTicker',
                 'getAppReady'
-            ])
+            ]),
+            ...mapState ({
+                currentState: state => state.app.globalState
+            })
         },
         created() {
             this.$store.watch((state) => {state.app.ticker}, this.pulse, {deep:true} );
-            this.$store.watch((state) => {state.app.appReady}, this.onAppready, {deep:true} );
+            this.$store.watch((state) => {state.app.globalState}, this.onChangeState, {deep:true} );
         },
         mounted() {
             this.init();
         },
         methods: {
             ...mapMutations([
-                'ticker'
+                'ticker',
+                'setAppGlobalState'
             ]),
             init() {
-
                 this.am = new AudioManger();
                 this.am.init();
                 this.am.loadSound('static/sound/heartbeat.wav', true);
@@ -62,21 +66,26 @@
                 else {
                     TweenMax.to(obj.target,.0325, {css:{opacity: obj.value}});
                 }
-
             },
             pulse() {
                 this.tl.play();
                 this.am.playSound();
             },
-            onAppready() {
-                if(this.getAppReady)
-                {
-                    console.log('passi di qui?')
-                    TweenMax.to([this.$refs.line5],1, {css:{opacity: .20}});
-                    TweenMax.to([this.$refs.line6,this.$refs.line4],1, {css:{opacity: .15}, delay: 2});
-                    TweenMax.to([this.$refs.line3,this.$refs.line7],1, {css:{opacity: .10}, delay: 2.5});
-                    TweenMax.to([this.$refs.line8,this.$refs.line2],1, {css:{opacity: .05}, delay: 3, onComplete: this.startPulse});
+            onChangeState() {
+                switch (this.currentState) {
+                    case GlobalState.GRID:
+                        TweenMax.to([this.$refs.line5],1, {css:{opacity: .20}});
+                        TweenMax.to([this.$refs.line6,this.$refs.line4],1, {css:{opacity: .15}, delay: 2});
+                        TweenMax.to([this.$refs.line3,this.$refs.line7],1, {css:{opacity: .10}, delay: 2.5});
+                        TweenMax.to([this.$refs.line8,this.$refs.line2],1, {css:{opacity: .05}, delay: 3, onComplete: this.changeState});
+                        break;
+                    case GlobalState.BASE: {
+                        this.startPulse();
+                    }
                 }
+            },
+            changeState() {
+                this.setAppGlobalState(GlobalState.BASE)
             },
             startPulse() {
                 //setInterval( () => {

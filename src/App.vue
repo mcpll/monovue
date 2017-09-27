@@ -26,6 +26,15 @@
 </script>
 
 <style>
+  @import url('https://fonts.googleapis.com/css?family=Lato:300,400,900|Ubuntu:400,700');
+  @font-face {
+    font-family: 'kaleidos';
+    src: url('../static/fonts/kaleidos-smooth-webfont.woff2') format('woff2'),
+    url('../static/fonts/kaleidos-smooth-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+
   html {
     height: 100%;
   }

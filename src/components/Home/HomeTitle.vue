@@ -1,26 +1,26 @@
 <template>
     <div>
-        <h1 ref="title">Emotional Gradient</h1>
+        <h1 ref="title">Emotional Type</h1>
     </div>
 </template>
 
 <script>
-    import { TweenMax} from 'gsap';
+    import { TweenMax } from 'gsap';
     import ColorPropsPlugin from '../../../node_modules/gsap/ColorPropsPlugin';
+    import GlobalState from '../../store/State'
 
     export default {
         name: 'HomeTitle',
-        props: ['currentColors'],
+        props: ['currentColors', 'currentState'],
         watch: {
             currentColors: {
                 handler: function (currentColors) {
                     TweenMax.to(this.color, 3, {colorProps:{first:currentColors.currentColors.first}, onUpdate:this.changeTextColor});
-                    TweenMax.to(this.color, 3, {colorProps:{second:currentColors.currentColors.second}, onUpdate:this.changeTextColor});
-                    //console.log('first color ' + currentColors.currentColors.first)
-                    //console.log('second color ' + currentColors.currentColors.second)
+                    TweenMax.to(this.color, 3, {colorProps:{second:currentColors.currentColors.second}, onUpdate:this.changeTextColor, delay: 2});
                 },
                 deep: true
-            }
+            },
+            currentState: 'onChangeState'
         },
         created() {
             this.init();
@@ -30,11 +30,17 @@
                 this.color = {first: this.currentColors.currentColors.first , second: this.currentColors.currentColors.second}
             },
             changeTextColor() {
-                console.log(this.color.first);
-                this.$refs.title.style.backgroundImage = 'background: linear-gradient(to right,' +  this.color.first + ' ,' + this.color.second +')';
-                this.$refs.title.style.backgroundImage = 'background: -webkit-linear-gradient(left,' +  this.color.first + ' ,' + this.color.second +')';
-                this.$refs.title.style.backgroundImage = 'background: -o-linear-gradient(right,' +  this.color.first + ' ,' + this.color.second +')';
-                this.$refs.title.style.backgroundImage = 'background: -moz-linear-gradient(right,' +  this.color.first + ' ,' + this.color.second +')';
+                this.$refs.title.style.background = 'radial-gradient(t' +  this.color.first + ' ,' + this.color.second +')';
+                this.$refs.title.style.background = '-webkit-radial-gradient(' +  this.color.first + ' ,' + this.color.second +')';
+                this.$refs.title.style.background = '-o-radial-gradient(' +  this.color.first + ' ,' + this.color.second +')';
+                this.$refs.title.style.background = '-moz-radial-gradient(' +  this.color.first + ' ,' + this.color.second +')';
+            },
+            onChangeState() {
+                switch(this.currentState.currentState) {
+                    case GlobalState.GRID:
+                        this.$refs.title.setAttribute("class", "active");
+                        break
+                }
             }
         }
     }
@@ -42,17 +48,20 @@
 
 <style scoped>
     h1 {
-        font-size: 22px;
+        font-size:40px;
         position: absolute;
-        font-weight: bold;
-        top:10px;
+        top:-90px;
+        font-family: 'kaleidos';
         left:7%;
-        text-transform: uppercase;
-        background: -webkit-linear-gradient(left, #02f902 , #01F775);
-        background: -o-linear-gradient(right, #02f902, #01F775);
-        background: -moz-linear-gradient(right, #02f902, #01F775);
-        background: linear-gradient(to right, #02f902 , #01F775);
-        -webkit-background-clip: text;
+        font-weight: normal;
+        -webkit-background-clip: text !important;
         -webkit-text-fill-color: transparent;
+        transition: top 2s;
+        opacity: 0;
+    }
+
+    .active {
+        top: 10px;
+        opacity: 1;
     }
 </style>

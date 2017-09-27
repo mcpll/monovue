@@ -6,14 +6,21 @@
     import * as PIXI from 'pixi.js';
     import { TweenMax} from 'gsap';
     import ColorPropsPlugin from '../../../../node_modules/gsap/ColorPropsPlugin'
-    import { mapMutations, mapGetters } from 'vuex';
+    import { mapMutations, mapGetters, mapState } from 'vuex';
+    import GlobalState from '../../../store/State'
 
     export default {
         name: 'PixiBackground',
         created() {
             this.$store.watch((state) => (state.mouse), this.moveFlare, {deep:true})
             this.$store.watch((state) => (state.app.currentColors), this.onColorChange, {deep:true})
+            this.$store.watch((state) => {state.app.globalState}, this.onChangeState, {deep:true} );
             window.addEventListener('resize', this.onResize);
+        },
+        computed: {
+            ...mapState({
+                    currentState: state => state.app.globalState
+                })
         },
         mounted() {
             this.init()
@@ -21,7 +28,8 @@
         methods: {
             ...mapMutations([
                 'setLoading',
-                'setAppReady'
+                'setAppReady',
+                'setAppGlobalState'
             ]),
             init() {
                 this.renderer = new PIXI.WebGLRenderer(window.innerWidth, window.innerHeight, { transparent: true }, true);
@@ -30,6 +38,8 @@
                 this.loading();
 
                 this.colors = {first:this.$store.getters.getCurrentColor('first'), second:this.$store.getters.getCurrentColor('second')}
+                this.perc = 0.5;
+
                 this.tm = 0;
                 this.blobFrames = [];
                 this.shadowFrame = [];
@@ -110,7 +120,7 @@
                 });
 
                 this.loader.onComplete.add(() => {
-                    this.setAppReady(true);
+                    this.setAppGlobalState(GlobalState.INTRO);
                 });
             },
             setup() {
@@ -147,10 +157,12 @@
                 this.stage.addChild(this.blob);
 
                 let canvas = document.createElement('canvas');
-                canvas.width = 800;
-                canvas.height = 800;
+                let dimensione = 400;
+
+                canvas.width = dimensione;
+                canvas.height = dimensione;
                 let context = canvas.getContext('2d');
-                let grad = context.createRadialGradient(400,400,0,400,400,565.69);
+                let grad = context.createRadialGradient(dimensione/2,dimensione/2,0,dimensione/2,dimensione/2,dimensione * this.perc/1.3);
 
                 grad.addColorStop(0, this.colors.first);
                 grad.addColorStop(1, this.colors.second);
@@ -166,24 +178,24 @@
                 this.blobBg.mask = this.blob;
                 this.stage.addChild(this.blobBg);
 
-                TweenMax.to(this.blob,3, {alpha:1,delay: 4});
-                TweenMax.to(this.blobShadows,3, {alpha:1,delay: 4});
-                TweenMax.to(this.flare,2, {alpha:1,delay: 4});
-
-
                 this.onResize();
 
             },
             onColorChange() {
-                TweenMax.to(this.colors, 3, {colorProps:{first:this.$store.getters.getCurrentColor('first')}, onUpdate:this.reDrowBlobBG});
-                TweenMax.to(this.colors, 3, {colorProps:{second:this.$store.getters.getCurrentColor('second')}, onUpdate:this.reDrowBlobBG, delay: 2});
+
+                TweenMax.to(this, 3, {perc: this.$store.getters.getFirstColorScore});
+                TweenMax.to(this.colors, 3, {colorProps:{first:this.$store.getters.getCurrentColor('first')}});
+                TweenMax.to(this.colors, 3, {colorProps:{second:this.$store.getters.getCurrentColor('second')}, onUpdate:this.reDrowBlobBG});
             },
+
             reDrowBlobBG() {
                 let canvas = document.createElement('canvas');
-                canvas.width = 800;
-                canvas.height = 800;
+                let dimensione = 400;
+
+                canvas.width = dimensione;
+                canvas.height = dimensione;
                 let context = canvas.getContext('2d');
-                let grad = context.createRadialGradient(400,400,0,400,400,565.69);
+                let grad = context.createRadialGradient(dimensione/2,dimensione/2,0,dimensione/2,dimensione/2,dimensione*(this.perc/1.3));
 
                 grad.addColorStop(0, this.colors.first);
                 grad.addColorStop(1, this.colors.second);
@@ -228,6 +240,19 @@
                 TweenMax.to(this.flare.position, 1.5, {x: x - 540, y: y - 580})
             },
 
+            onChangeState() {
+                switch (this.currentState) {
+                    case GlobalState.INTRO:
+                        TweenMax.to(this.flare, 2, {alpha: 1, delay: 1});
+                        break;
+                    case GlobalState.BASE:
+                        console.log('base pixibg')
+                        TweenMax.to(this.blob, 3, {alpha: 1});
+                        TweenMax.to(this.blobShadows, 3, {alpha: 1});
+                        break;
+                }
+            },
+
             onResize() {
                 let w = window.innerWidth;
                 let h = window.innerHeight;
@@ -239,7 +264,6 @@
                 let maxwhh = window.innerWidth;
                 let consthhpadding = 50;
 
-
                 if (window.innerHeight < maxwhh){
                     maxwhh = window.innerHeight;
                 }
@@ -250,7 +274,6 @@
                 if (maxwhh > 800){
                     maxwhh=800;
                 }
-                console.log(maxwhh);
 
                 this.blobBg.width = this.blob.width = this.blobShadows.width = maxwhh-consthhpadding;
                 this.blobBg.height= this.blob.height = this.blobShadows.height = maxwhh-consthhpadding;

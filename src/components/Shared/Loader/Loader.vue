@@ -1,14 +1,16 @@
 <template>
     <div ref="loader" class="loader">
-        <div ref="upperLine" class="upper-line"></div>
-        <div ref="lowerLine" class="lower-line"></div>
+        <p ref="unit" class="unit">{{ this.loadingPerc }}</p>
+        <!--<div ref="upperLine" class="upper-line"></div>
+        <div ref="lowerLine" class="lower-line"></div>-->
     </div>
 </template>
 
 <script>
     import AssetLoader from 'assets-loader';
     import { TweenMax } from 'gsap';
-    import { mapGetters } from 'vuex';
+    import { mapGetters, mapState } from 'vuex';
+    import GlobalState from '../../../store/State';
 
     const data = require('./data.json');
 
@@ -16,14 +18,20 @@
         name: 'Loader',
         created() {
             this.$store.watch((state) => {state.app.loading}, this.update, {deep:true} );
-            this.$store.watch((state) => {state.app.appReady}, this.onAppReady, {deep:true} );
+            this.$store.watch((state) => {state.app.globalState}, this.onChangeState, {deep:true} );
         },
 
         computed: {
             ...mapGetters([
                 'getLoading',
                 'getAppReady'
-            ])
+            ]),
+            ...mapState({
+                currentState: state => state.app.globalState
+            }),
+            loadingPerc() {
+              return  Math.trunc(this.getLoading) + '%';
+            }
         },
 
         methods: {
@@ -31,15 +39,18 @@
                 let val = (this.getLoading/2) - 50;
                 val = + Math.trunc(val) + 'vh';
                 //console.log(val);
-                document.getElementsByClassName("upper-line")[0].style.top = val;
-                document.getElementsByClassName("lower-line")[0].style.bottom = val;
+                //document.getElementsByClassName("upper-line")[0].style.top = val;
+                //document.getElementsByClassName("lower-line")[0].style.bottom = val;
 
             },
 
-            onAppReady() {
-                if(this.getAppReady) {
-                    TweenMax.to(this.$refs.upperLine, 1, {css: {opacity: 0}, delay: 1});
-                    TweenMax.to(this.$refs.lowerLine, 1, {css: {opacity: 0, onComplete: this.hidden},delay: 1});
+            onChangeState() {
+                switch (this.currentState) {
+                    case GlobalState.INTRO:
+                        //TweenMax.to(this.$refs.upperLine, 1, {css: {opacity: 0}, delay: 1});
+                        //TweenMax.to(this.$refs.lowerLine, 1, {css: {opacity: 0, onComplete: this.hidden},delay: 1});
+                        TweenMax.to(this.$refs.unit,.8,{css: {opacity: 0, onComplete: this.hidden}, delay: .5})
+                    break;
                 }
             },
 
@@ -84,6 +95,16 @@
         width: 100vw;
         height: 100vh;
         background-color: transparent;
+        display: flex;
+        align-items: center;
+        height: 100vh;
+        justify-content: center;
+    }
+    .unit {
+        font-size: 24px;
+        color: #5b5b5b;
+        font-family: Lato, sans-serif;
+
     }
     .upper-line {
         border-left: 1px solid white;

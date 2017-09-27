@@ -6,6 +6,7 @@
 const GlobalState = {
     START : 'start',
     INTRO : 'intro',
+    GRID : 'grid',
     BASE : 'base',
     RESULT : 'result'
 }

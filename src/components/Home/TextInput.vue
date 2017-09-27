@@ -5,7 +5,8 @@
 <script>
     import _ from 'lodash';
     import { TweenMax } from 'gsap';
-    import { mapActions, mapGetters } from 'vuex';
+    import { mapActions, mapGetters, mapState } from 'vuex';
+    import GlobalState from '../../store/State'
 
     export default {
         name: 'textAnalyzer',
@@ -19,10 +20,15 @@
             }
         },
         created() {
-            this.$store.watch((state) => {state.app.appReady}, this.appear, {deep:true} );
+            this.$store.watch((state) => {state.app.globalState}, this.onChangeState, {deep:true} );
         },
         mounted() {
             this.callAnalysisDebaunce = _.debounce( this.callAnalysis, 500);
+        },
+        computed: {
+            ...mapState({
+                currentState: state => state.app.globalState
+            })
         },
         methods: {
             ...mapActions([
@@ -54,24 +60,24 @@
                     this.limitIndex = 0
                 }
             },
-            appear() {
-                TweenMax.to(this.$refs.textarea, 2, {alpha:1, delay: 4.5})
+            onChangeState() {
+                switch (this.currentState) {
+                    case GlobalState.BASE:
+                        TweenMax.to(this.$refs.textarea, 2, {alpha:1, delay: 4.5})
+                        break;
+                }
             }
         },
     }
 </script>
 
 
-<style sco
-
-       ped>
-    @import url('https://fonts.googleapis.com/css?family=Lato');
-
+<style scoped>
     textarea {
         background-color: transparent;
         border: none;
         color:#ffffff;
-        font-family: 'Lato', sans-serif;
+        font-family: 'Roboto', sans-serif;
         font-size: 19px;
         text-transform: uppercase;
         text-align: center;
