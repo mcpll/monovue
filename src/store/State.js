@@ -8,7 +8,8 @@ const GlobalState = {
     INTRO : 'intro',
     GRID : 'grid',
     BASE : 'base',
-    RESULT : 'result'
+    RESULT : 'result',
+    LOADING: 'loading'
 }
 
 export default GlobalState

@@ -30,7 +30,7 @@
                 currentState: state => state.app.globalState
             }),
             loadingPerc() {
-              return  Math.trunc(this.getLoading) + '%';
+              return  Math.ceil(this.getLoading) + '%';
             }
         },
 

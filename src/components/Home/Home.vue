@@ -1,13 +1,15 @@
 <template>
   <div class="home">
-    <home-title :current-colors="{ currentColors }" :current-state="{ currentState }"></home-title>
-    <home-monofonts-logo :current-state="{ currentState }"></home-monofonts-logo>
-    <intro :current-state="{ currentState }"></intro>
+    <home-title :current-colors="currentColors" :current-state="currentState"></home-title>
+    <home-monofonts-logo :current-state="currentState"></home-monofonts-logo>
+    <intro :current-state="currentState"></intro>
     <!--<about @aboutclick="onAboutClick" :is-open="{ aboutIsOpen }"></about>-->
     <div ref="analyzer_container" class="text-analyzer-container">
-      <home-emotion-result></home-emotion-result>
+      <home-emotion-result :first-emotion="getEmotion(0)" :second-emotion="getEmotion(1)" :score="getScore"></home-emotion-result>
+      <p :class="{active: isLoading}" class="load" ref="load"><span>WAIT</span> <br> We're analyzing yours sentence</p>
       <text-analyzer></text-analyzer>
     </div>
+    <a class="back" ref="back" @click="onBackButtonClick">Back</a>
   </div>
 </template>
 
@@ -16,7 +18,7 @@
     import TextAnalyzer from "./TextInput";
     import Test from "../Shared/Test/test";
     import HomeTitle from "./HomeTitle";
-    import { mapMutations,  mapActions, mapState } from 'vuex';
+    import { mapMutations,  mapActions, mapState, mapGetters } from 'vuex';
     import GlobalState from '../../store/State'
     import Intro from "./Intro/Intro";
     import HomeMonofontsLogo from "./HomeMonofontsLogo";
@@ -28,9 +30,10 @@
         data: function () {
             return {
                 aboutIsOpen: false,
-                firstEmotion: '',
-                secondEmotion: '',
                 appReady: false,
+                isLoading: false,
+                //analyzerContainerHeight: this.$refs.analyzer_container.style.height,
+                //analyzerContainerWidth: this.$refs.analyzer_container.style.width
             }
         },
         components: {
@@ -38,7 +41,6 @@
             HomeMonofontsLogo,
             Intro,
             HomeTitle,
-            Test,
             TextAnalyzer,
             About
         },
@@ -46,10 +48,16 @@
             ...mapState({
                 currentColors: state => state.app.currentColors,
                 currentState: state => state.app.globalState,
-            })
+                clickedDone: state => state.app.clickedDone
+            }),
+            ...mapGetters({
+                getEmotion: 'getEmotionByPosition',
+                getScore: 'getFirstColorScore'
+            }),
         },
         created() {
             this.$store.watch((state) => {state.app.emotionalResult}, this.onChangeEmotion, {deep:true} );
+            this.$store.watch((state) => {state.app.globalState}, this.onChangeState, {deep:true} );
             window.addEventListener('resize', this.onResize);
             this.setToken();
         },
@@ -60,6 +68,8 @@
             ...mapMutations ([
                 'setFirstColor',
                 'setSecondColor',
+                'setAppGlobalState',
+                'setClickedDone'
             ]),
             ...mapActions ([
                 'setToken'
@@ -68,10 +78,10 @@
                 this.aboutIsOpen = !this.aboutIsOpen;
             },
             onChangeEmotion() {
-                let firstEmotion = this.$store.getters.getEmotionByPosition(0);
-                let secondEmotion = this.$store.getters.getEmotionByPosition(1);
+                let emo_array = [this.getEmotion(0),this.getEmotion(1)];
 
-                let emo_array = [firstEmotion,secondEmotion];
+                if(this.clickedDone)
+                    return
 
                 emo_array.forEach((value, index) => {
                     switch(value) {
@@ -114,6 +124,29 @@
                 });
 
             },
+            onBackButtonClick() {
+                this.setClickedDone(false);
+                this.setAppGlobalState(GlobalState.BASE);
+            },
+            onTimeOutEnd() {
+                this.setAppGlobalState(GlobalState.RESULT)
+            },
+            onChangeState() {
+                switch (this.currentState) {
+                    case GlobalState.BASE:
+                        TweenMax.to(this.$refs.back,1, {opacity:0,left: 0});
+                        TweenMax.to(this.$refs.load,0, {opacity:0});
+                        break;
+                    case GlobalState.RESULT:
+                        TweenMax.fromTo(this.$refs.back,1, {opacity:0,left: 0}, {opacity: 1, left: 20});
+                        TweenMax.to(this.$refs.load,1, {opacity:0});
+                        break;
+                    case GlobalState.LOADING:
+                        TweenMax.to(this.$refs.load,1, {opacity:1, delay: 1.5});
+                        setTimeout(this.onTimeOutEnd, 6000);
+                        break;
+                }
+            },
             onResize() {
                 let maxwhh = window.innerWidth;
                 let consthhpadding = 150;
@@ -138,6 +171,8 @@
                 this.$refs.analyzer_container.style.height = h + 'px';
                 this.$refs.analyzer_container.style.top = top;
                 this.$refs.analyzer_container.style.left = left;
+
+                //this.analyzerContainerWidth = this.$refs.analyzer_container.style.width;
             }
         }
     }
@@ -153,7 +188,6 @@
   }
 
   .text-analyzer-container {
-    border: 1px solid red;
     position: relative;
   }
 h1, h2 {
@@ -172,5 +206,39 @@ li {
 
 a {
   color: #42b983;
+}
+
+.load {
+  color: white;
+  font-size: 12px;
+  font-family: 'Ubuntu', sans-serif;
+  opacity: 0;
+  position: absolute;
+  top: 32%;
+  left: 30%;
+  display: none;
+}
+
+.load.active {
+  opacity: 1;
+}
+
+.load span {
+  color: white;
+  font-size: 60px;
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: bold;
+  line-height: 20px;
+}
+
+a.back {
+  color: #42b983;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 11px;
+  text-transform: uppercase;
+  position: absolute;
+  left: 20px;
+  top:50%;
+  opacity: 0;
 }
 </style>

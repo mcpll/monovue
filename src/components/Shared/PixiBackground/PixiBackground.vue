@@ -29,7 +29,8 @@
             ...mapMutations([
                 'setLoading',
                 'setAppReady',
-                'setAppGlobalState'
+                'setAppGlobalState',
+                'setDefaultColors'
             ]),
             init() {
                 this.renderer = new PIXI.WebGLRenderer(window.innerWidth, window.innerHeight, { transparent: true }, true);
@@ -66,6 +67,15 @@
                 this.stage.filters = [this.filter];
 
                 this.$refs.bgRenderer.appendChild(this.renderer.view);
+
+                let VideoTexture = PIXI.Texture.fromVideo('/static/video/medialart.mp4')
+                this.generalVideo = new PIXI.Sprite(VideoTexture);
+
+                this.generalVideo.alpha = 0.15;
+                this.generalVideo.x = 0;
+                this.generalVideo.y = 0;
+
+                this.stage.addChild(this.generalVideo);
 
                 this.animate();
             },
@@ -113,6 +123,7 @@
                     .add('/static/sprite/ombra-6.json')
                     .add('/static/sprite/ombra-7.json')
                     .add('/static/sprite/prova-blob.mp4')
+                    .add('/static/video/medialart.mp4')
                     .load(this.setup);
 
                 this.loader.onProgress.add(() => {
@@ -182,8 +193,14 @@
 
             },
             onColorChange() {
-
-                TweenMax.to(this, 3, {perc: this.$store.getters.getFirstColorScore});
+                let falsper=.1;
+                if (this.$store.getters.getFirstColorScore>0){
+                   falsper= this.$store.getters.getFirstColorScore;
+                } else {
+                    this.setDefaultColors();
+                    return
+                }
+                TweenMax.to(this, 3, {perc: falsper});
                 TweenMax.to(this.colors, 3, {colorProps:{first:this.$store.getters.getCurrentColor('first')}});
                 TweenMax.to(this.colors, 3, {colorProps:{second:this.$store.getters.getCurrentColor('second')}, onUpdate:this.reDrowBlobBG});
             },
@@ -246,9 +263,12 @@
                         TweenMax.to(this.flare, 2, {alpha: 1, delay: 1});
                         break;
                     case GlobalState.BASE:
-                        console.log('base pixibg')
                         TweenMax.to(this.blob, 3, {alpha: 1});
                         TweenMax.to(this.blobShadows, 3, {alpha: 1});
+                        break;
+                    case GlobalState.RESULT:
+                        TweenMax.to(this.blob, 3, {alpha: 0});
+                        TweenMax.to(this.blobShadows, 3, {alpha: 0});
                         break;
                 }
             },

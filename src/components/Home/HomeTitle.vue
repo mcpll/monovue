@@ -15,29 +15,31 @@
         watch: {
             currentColors: {
                 handler: function (currentColors) {
-                    TweenMax.to(this.color, 3, {colorProps:{first:currentColors.currentColors.first}, onUpdate:this.changeTextColor});
-                    TweenMax.to(this.color, 3, {colorProps:{second:currentColors.currentColors.second}, onUpdate:this.changeTextColor, delay: 2});
+                    TweenMax.to(this.color, 3, {colorProps:{first:currentColors.first}, onUpdate:this.changeTextColor});
+                    TweenMax.to(this.color, 3, {colorProps:{second:currentColors.second}, onUpdate:this.changeTextColor, delay: 2});
                 },
                 deep: true
             },
             currentState: 'onChangeState'
         },
-        created() {
+        mounted() {
             this.init();
         },
         methods: {
             init() {
-                this.color = {first: this.currentColors.currentColors.first , second: this.currentColors.currentColors.second}
+                this.color = {first: this.currentColors.first , second: this.currentColors.second}
+                this.changeTextColor();
             },
             changeTextColor() {
-                this.$refs.title.style.background = 'radial-gradient(t' +  this.color.first + ' ,' + this.color.second +')';
+                this.$refs.title.style.background = 'radial-gradient(' +  this.color.first + ' ,' + this.color.second +')';
                 this.$refs.title.style.background = '-webkit-radial-gradient(' +  this.color.first + ' ,' + this.color.second +')';
                 this.$refs.title.style.background = '-o-radial-gradient(' +  this.color.first + ' ,' + this.color.second +')';
                 this.$refs.title.style.background = '-moz-radial-gradient(' +  this.color.first + ' ,' + this.color.second +')';
             },
             onChangeState() {
-                switch(this.currentState.currentState) {
+                switch(this.currentState) {
                     case GlobalState.GRID:
+                        console.log('ci passo');
                         this.$refs.title.setAttribute("class", "active");
                         break
                 }

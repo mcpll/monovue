@@ -88,9 +88,9 @@
                 this.setAppGlobalState(GlobalState.BASE)
             },
             startPulse() {
-                //setInterval( () => {
-                    //this.ticker();
-                //}, 800)
+                /*setInterval( () => {
+                    this.ticker();
+                }, 1000)*/
             }
         }
     }

@@ -17,7 +17,7 @@
         },
         methods: {
             onChangeState() {
-                switch(this.currentState.currentState) {
+                switch(this.currentState) {
                     case GlobalState.GRID:
                         this.$refs.img.setAttribute("class", "active");
                         break

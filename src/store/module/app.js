@@ -10,10 +10,12 @@ var ToneAnalyzerV3 = require('watson-developer-cloud/tone-analyzer/v3')
 const state = {
     leavePage: false,
     appReady: false,
-    prevState: '',
+    prevState: GlobalState.START,
     globalState: GlobalState.START,
+    clickedDone: false,
     ticker: 0,
     loading: 0,
+    emoCount: 0,
     emotionalResult : [],
     colors: {
         'first': {
@@ -66,8 +68,15 @@ const mutations = {
     },
     setToken: (state, payload) => {
         state.token = payload;
+    },
+    setDefaultColors: (state) => {
+        state.currentColors.first = '#5b5b5b';
+        state.currentColors.second = '#303030';
+        state.emotionalResult = [];
+    },
+    setClickedDone: (state, payload) => {
+        state.clickedDone = payload;
     }
-
 }
 
 const actions = {
@@ -90,14 +99,16 @@ const actions = {
             token: state.token,
             version_date: '2016-05-19',
         });
+        state.emoCount += 1;
         ToneAnalyzer.tone({text:payload}, function(err, result)  {
             if(err) {
                 console.log(err)
             }
             else {
-                console.log();
+                // console.log(result);
                 let tone_res = result.document_tone.tone_categories[0].tones;
                 let tone_result = _.values(_.sortBy(tone_res, 'score').reverse());
+                console.log(tone_result);
                 commit('setEmotionResult', tone_result)
             }
         })
@@ -119,7 +130,7 @@ const getters = {
             return state.emotionalResult[id].tone_id
         }
         else {
-            return 'Non disponibile'
+            return ''
         }
     },
     getColors: (state, getter) => (id) => {

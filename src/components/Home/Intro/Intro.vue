@@ -25,7 +25,7 @@
                 'setAppGlobalState'
             ]),
             onChangeState() {
-                switch(this.currentState.currentState) {
+                switch(this.currentState) {
                     case GlobalState.INTRO:
                         console.log('via');
                         let tl =  new TimelineLite();
